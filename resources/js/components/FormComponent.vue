@@ -16,8 +16,14 @@
 
 <script>
     export default {
+        props: {
+            path: {
+                type: String,
+                required: true,
+            }
+        },
         mounted() {
-            console.log('Component mounted.')
+            console.log(this.path)
         }
     }
 </script>

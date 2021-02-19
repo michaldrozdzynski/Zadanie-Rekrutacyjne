@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ExcelFile;
+use Excel;
 class HomeController extends Controller
 {
     /**
@@ -11,6 +13,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $example_path = public_path('arkusz.xlsx');
+        Excel::import(new ExcelFile, $example_path);
+      
+
+        return view('home', ['path' => $example_path]);
     }
 }

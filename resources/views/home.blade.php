@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<Example-Component/>
+<Form-Component
+    path={{$path}}
+/>
 
 @endsection
