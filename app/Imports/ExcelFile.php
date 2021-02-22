@@ -46,7 +46,6 @@ class ExcelFile implements ToCollection
 
         while ($this->isMultipleValueInCell($length, $array)) {}
         array_push($this->data, $array);;
-        //dd($array);
     }
 
     public function getData() {

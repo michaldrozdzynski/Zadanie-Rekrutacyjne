@@ -1859,6 +1859,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     data: {
@@ -1866,14 +1876,103 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     }
   },
-  mounted: function mounted() {
-    for (var i = 0; i < this.data.length; i++) {
-      for (var j = 0; j < this.data[i].length; j++) {
-        this.data[i][j] = this.data[i][j].replaceAll('/s', ' ');
+  data: function data() {
+    var data = this.data;
+
+    for (var i = 0; i < data.length; i++) {
+      for (var j = 0; j < data[i].length; j++) {
+        this.data[i][j] = data[i][j].replaceAll('/s', ' ');
       }
+
+      data[i] = Object.assign({}, data[i]);
     }
 
-    console.log(this.data);
+    data = Object.assign({}, data);
+    var index = [];
+
+    for (var element in this.data) {
+      index[element] = false;
+    }
+
+    return {
+      currentSelect: 0,
+      selected: [],
+      modifiedData: data,
+      indentificator: index,
+      hideDownloadButton: true
+    };
+  },
+  methods: {
+    download: function download() {
+      axios.get('/download').then(function (response) {
+        var url = response.data.file;
+        window.open(url, '_blank');
+      });
+    },
+    restart: function restart() {
+      this.selected = [];
+      var index = [];
+
+      for (var element in this.data) {
+        index[element] = false;
+      }
+
+      this.indentificator = index;
+      this.hideDownloadButton = true;
+      this.currentSelect = 0;
+      this.$forceUpdate();
+    },
+    optionValue: function optionValue(index) {
+      var array = [];
+
+      for (var ind in this.modifiedData) {
+        var hide = this.selected.includes(ind);
+
+        if (this.indentificator[index] || !hide && this.modifiedData[ind] !== null && this.modifiedData[ind][index] != "" && ind > 0) {
+          array[ind] = this.modifiedData[ind][index];
+        }
+      }
+
+      if (this.indentificator[index] && index == this.currentSelect) {
+        this.currentSelect++;
+      }
+
+      if (array.length === 0) {
+        this.indentificator[index] = true;
+      }
+
+      return array;
+    },
+    disabledSelect: function disabledSelect(index) {
+      return this.indentificator[index];
+    },
+    showSelect: function showSelect(index) {
+      var value = this.indentificator.indexOf(false);
+
+      if (index < this.currentSelect && this.selected[index] == undefined) {
+        return false;
+      }
+
+      if (value < 0) {
+        this.hideDownloadButton = false;
+
+        if (this.selected[index] != undefined) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      return value >= index;
+    },
+    selectedOption: function selectedOption(event, index) {
+      if (event.target.value != 0) {
+        this.indentificator[index] = true;
+        this.selected[index] = event.target.value;
+        this.currentSelect++;
+        this.$forceUpdate();
+      }
+    }
   }
 });
 
@@ -37374,24 +37473,91 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-body" })
-          ])
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _vm._l(_vm.modifiedData[0], function(item, index) {
+                return _c("div", { key: index, staticClass: "form-group" }, [
+                  _vm.optionValue(index).length > 0 && _vm.showSelect(index)
+                    ? _c("div", [
+                        _c("label", [_vm._v(_vm._s(item))]),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            staticClass: "form-control",
+                            attrs: { disabled: _vm.disabledSelect(index) },
+                            on: {
+                              change: function(event) {
+                                return _vm.selectedOption(event, index)
+                              }
+                            }
+                          },
+                          [
+                            _c(
+                              "option",
+                              {
+                                attrs: { selected: "" },
+                                domProps: { value: 0 }
+                              },
+                              [_vm._v("Choose option")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.optionValue(index), function(
+                              element,
+                              ind
+                            ) {
+                              return _c(
+                                "option",
+                                {
+                                  key: ind,
+                                  attrs: { hidden: element == null },
+                                  domProps: { value: ind }
+                                },
+                                [_vm._v(_vm._s(element))]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ])
+                    : _vm._e()
+                ])
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: { click: _vm.restart }
+                },
+                [_vm._v("Restart")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button", hidden: _vm.hideDownloadButton },
+                  on: { click: _vm.download }
+                },
+                [_vm._v("Download PDF")]
+              )
+            ],
+            2
+          )
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
