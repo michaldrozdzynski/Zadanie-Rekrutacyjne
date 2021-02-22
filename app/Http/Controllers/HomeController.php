@@ -14,9 +14,16 @@ class HomeController extends Controller
     public function index()
     {
         $example_path = public_path('arkusz.xlsx');
-        Excel::import(new ExcelFile, $example_path);
-      
+        $import = new ExcelFile;
+        Excel::import($import, $example_path);
+        $data = $import->getData();
+        
+        foreach ($data as $index => $element) {
+            foreach ($element as $key => $value) {
+                $data[$index][$key] = str_replace(' ', "/s", $data[$index][$key]);
+            }
+        }
 
-        return view('home', ['path' => $example_path]);
+        return view('home', compact('data'));
     }
 }

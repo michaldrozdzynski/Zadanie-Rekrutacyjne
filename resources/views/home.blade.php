@@ -2,7 +2,7 @@
 
 @section('content')
 <Form-Component
-    path={{$path}}
+    :data={{json_encode($data)}}
 />
 
 @endsection

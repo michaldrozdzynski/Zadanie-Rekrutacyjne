@@ -1859,17 +1859,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    path: {
-      type: String,
+    data: {
+      type: Array,
       required: true
     }
   },
   mounted: function mounted() {
-    console.log(this.path);
+    for (var i = 0; i < this.data.length; i++) {
+      for (var j = 0; j < this.data[i].length; j++) {
+        this.data[i][j] = this.data[i][j].replaceAll('/s', ' ');
+      }
+    }
+
+    console.log(this.data);
   }
 });
 
@@ -37381,15 +37385,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "row justify-content-center" }, [
         _c("div", { staticClass: "col-md-8" }, [
           _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
+            _c("div", { staticClass: "card-body" })
           ])
         ])
       ])

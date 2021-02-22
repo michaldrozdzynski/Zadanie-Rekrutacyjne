@@ -4,7 +4,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        I'm an example component.
+
                     </div>
                 </div>
             </div>
@@ -15,13 +15,19 @@
 <script>
     export default {
         props: {
-            path: {
-                type: String,
+            data: {
+                type: Array,
                 required: true,
             }
         },
+
         mounted() {
-            console.log(this.path)
+            for (let i = 0; i < this.data.length; i++) {
+                for (let j = 0; j < this.data[i].length; j++) {
+                    this.data[i][j] = this.data[i][j].replaceAll('/s', ' ')
+                }
+            }
+            console.log(this.data)
         }
     }
 </script>
